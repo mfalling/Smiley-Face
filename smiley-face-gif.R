@@ -83,4 +83,4 @@ img_joined <- image_join(img_list)
 img_animated <- image_animate(img_joined, fps = 20)
 
 # Save.
-image_write(image = img_animated, path = "smiley.gif")
+image_write(image = img_animated, path = "gifs/smiley1.gif")
