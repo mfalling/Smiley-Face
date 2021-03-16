@@ -1,11 +1,12 @@
 # Library -----------------------------------------------------------------
 library(gtools)    # To switch from alphabetical to natural sort.
 library(magick)    # To make a gif.
+library(ggplot2)
 
 # Create Mouth ------------------------------------------------------------
 
 # Empty df
-mouth <- data.frame()
+mouthCoords <- data.frame()
 dots <- -20:10
 
 # Create a parabola, `y`, and imperatively draw each point.
@@ -13,16 +14,25 @@ for (i in 1:length(dots)){
   x <- dots[i]
   y <- .1*x^2 + x + 10
   coords <- cbind(x, y)
-  mouth <- rbind(mouth, coords)
-
-  # Save file.
-  filename <- paste0("output/", "1_", i, ".png")
-  png(file = filename, width = 850, height = 450)
-  plot(mouth$x, mouth$y, 
-       xlab = "", ylab = "",
-       xlim = c(-50,50), ylim = c(0,125),
-       axes = FALSE, frame.plot = FALSE)
-  dev.off()
+  mouthCoords <- rbind(mouthCoords, coords)
+  
+  # Draw the mouth
+  mouth <- ggplot() +
+    geom_line(data = mouthCoords, 
+              aes(x = x, y = y, size = 3)) +
+    lims(x = c(-25, 15), y = c(-10, 75)) +
+    annotate(geom = "text", x = -5, y = 70, size = 15, 
+             label = "Don't Worry") +
+    annotate(geom = "text", x = -5, y = -5, size = 15, 
+             label = "Be Happy") +
+    theme_void() +
+    theme(plot.background = element_rect(fill = "yellow")) +
+    theme(legend.position = "none")
+  print(mouth)
+  
+  # Save the progress
+  filename <- paste0("output/ggplot/", "1_", i, ".png")
+  ggsave(filename, dpi = "screen")
 }
 
 # Prep for Eyes -----------------------------------------------------------
@@ -31,7 +41,7 @@ for (i in 1:length(dots)){
 radius <- 3
 
 # Set theta (amount of dots and angle)
-theta <- seq(from = 0, to = 5.5,  by = .5)
+theta <- seq(from = 0, to = 6,  by = .25)
 
 # Set coordinates for circles (left and right eyes)
 ycoords <- sin(theta) * (radius * 2.5) + 50
@@ -40,39 +50,40 @@ Rxcoords <- cos(theta) * (radius) + 1
 
 # Create Eyes -------------------------------------------------------------
 
+
 # Draw the left eye
 lefteye <- data.frame()
-for (i in 1:12) {
+for (i in 1:length(theta)) {
   coords <- cbind(Lxcoords[i], ycoords[i])
   lefteye <- rbind(lefteye, coords)
   
-  # Save file.
-  filename <- paste0("output/", "2_", i, ".png")
-  png(file = filename, width = 850, height = 450)
-  plot(mouth$x, mouth$y, 
-       xlab = "", ylab = "",
-       xlim = c(-50,50), ylim = c(0,125),
-       axes = FALSE, frame.plot = FALSE)
-  points(lefteye$V1, lefteye$V2, xlim = c(-50,50), ylim = c(0,125))
-  dev.off()
+  # Draw the left eye
+  mouth_LEye <- mouth + 
+    geom_polygon(data = lefteye, aes(x = V1, y = V2)) +
+    theme(legend.position = "none")
+  print(mouth_LEye)
+  
+  # Save the progress
+  filename <- paste0("output/ggplot/", "2_", i, ".png")
+  ggsave(filename, dpi = "screen")
 }
+
 
 # Draw the right eye
 righteye <- data.frame()
-for (i in 1:12) {
+for (i in 1:length(theta)) {
   coords <- cbind(Rxcoords[i], ycoords[i])
   righteye <- rbind(righteye, coords)
   
-  # Save file.
-  filename <- paste0("output/", "3_", i, ".png")
-  png(file = filename, width = 850, height = 450)
-  plot(mouth$x, mouth$y, 
-       xlab = "", ylab = "",
-       xlim = c(-50,50), ylim = c(0,125),
-       axes = FALSE, frame.plot = FALSE)
-  points(lefteye$V1, lefteye$V2, xlim = c(-50,50), ylim = c(0,125))
-  points(righteye$V1, righteye$V2, xlim = c(-50,50), ylim = c(0,125))
-  dev.off()
+  # Draw the right eye
+  smiley <- mouth_LEye + 
+    geom_polygon(data = righteye, aes(x = V1, y = V2)) +
+    theme(legend.position = "none")
+  print(smiley)
+  
+  # Save the smiley face
+  filename <- paste0("output/ggplot/", "3_", i, ".png")
+  ggsave(filename, dpi = "screen")
 }
 
 
@@ -81,7 +92,7 @@ for (i in 1:12) {
 # From http://www.nagraj.net/notes/gifs-in-r/
 
 # List & sort files.
-imgs <- list.files("output", full.names = TRUE)
+imgs <- list.files("output/ggplot", full.names = TRUE)
 imgs <- mixedsort(imgs)
 img_list <- lapply(imgs, image_read)
 
@@ -92,5 +103,6 @@ img_joined <- image_join(img_list)
 img_animated <- image_animate(img_joined, fps = 20)
 img_animated
 
+
 # Save.
-image_write(image = img_animated, path = "gifs/smiley3.gif")
+image_write(image = img_animated, path = "gifs/ggsmiley.gif")
