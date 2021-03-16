@@ -16,11 +16,11 @@ for (i in 1:length(dots)){
   mouth <- rbind(mouth, coords)
 
   # Save file.
-  filename <- paste0("output/", "1_", i, ".png")
-  png(file = filename, width = 850, height = 450)
+  filename <- paste0("output/base/", "1_", i, ".png")
+  png(file = filename, width = 500, height = 450)
   plot(mouth$x, mouth$y, 
        xlab = "", ylab = "",
-       xlim = c(-50,50), ylim = c(0,125),
+       xlim = c(-25, 15), ylim = c(-10, 75),
        axes = FALSE, frame.plot = FALSE)
   dev.off()
 }
@@ -42,36 +42,36 @@ Rxcoords <- cos(theta) * (radius) + 1
 
 # Draw the left eye
 lefteye <- data.frame()
-for (i in 1:12) {
+for (i in 1:length(theta)) {
   coords <- cbind(Lxcoords[i], ycoords[i])
   lefteye <- rbind(lefteye, coords)
   
   # Save file.
-  filename <- paste0("output/", "2_", i, ".png")
-  png(file = filename, width = 850, height = 450)
+  filename <- paste0("output/base/", "2_", i, ".png")
+  png(file = filename, width = 500, height = 450)
   plot(mouth$x, mouth$y, 
        xlab = "", ylab = "",
-       xlim = c(-50,50), ylim = c(0,125),
+       xlim = c(-25, 15), ylim = c(-10, 75),
        axes = FALSE, frame.plot = FALSE)
-  points(lefteye$V1, lefteye$V2, xlim = c(-50,50), ylim = c(0,125))
+  points(lefteye$V1, lefteye$V2, xlim = c(-25, 15), ylim = c(-10, 75))
   dev.off()
 }
 
 # Draw the right eye
 righteye <- data.frame()
-for (i in 1:12) {
+for (i in 1:length(theta)) {
   coords <- cbind(Rxcoords[i], ycoords[i])
   righteye <- rbind(righteye, coords)
   
   # Save file.
-  filename <- paste0("output/", "3_", i, ".png")
-  png(file = filename, width = 850, height = 450)
+  filename <- paste0("output/base/", "3_", i, ".png")
+  png(file = filename, width = 500, height = 450)
   plot(mouth$x, mouth$y, 
        xlab = "", ylab = "",
-       xlim = c(-50,50), ylim = c(0,125),
+       xlim = c(-25, 15), ylim = c(-10, 75),
        axes = FALSE, frame.plot = FALSE)
-  points(lefteye$V1, lefteye$V2, xlim = c(-50,50), ylim = c(0,125))
-  points(righteye$V1, righteye$V2, xlim = c(-50,50), ylim = c(0,125))
+  points(lefteye$V1, lefteye$V2, xlim = c(-25, 15), ylim = c(-10, 75))
+  points(righteye$V1, righteye$V2, xlim = c(-25, 15), ylim = c(-10, 75))
   dev.off()
 }
 
@@ -81,7 +81,7 @@ for (i in 1:12) {
 # From http://www.nagraj.net/notes/gifs-in-r/
 
 # List & sort files.
-imgs <- list.files("output", full.names = TRUE)
+imgs <- list.files("output/base", full.names = TRUE)
 imgs <- mixedsort(imgs)
 img_list <- lapply(imgs, image_read)
 
@@ -93,4 +93,4 @@ img_animated <- image_animate(img_joined, fps = 20)
 img_animated
 
 # Save.
-image_write(image = img_animated, path = "gifs/smiley3.gif")
+image_write(image = img_animated, path = "gifs/smiley4.gif")
