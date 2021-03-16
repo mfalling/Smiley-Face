@@ -17,7 +17,7 @@ for (i in 1:length(dots)){
 
   # Save file.
   filename <- paste0("output/", "1_", i, ".png")
-  png(file = filename)
+  png(file = filename, width = 850, height = 450)
   plot(mouth$x, mouth$y, 
        xlab = "", ylab = "",
        xlim = c(-50,50), ylim = c(0,125),
@@ -48,7 +48,7 @@ for (i in 1:12) {
   
   # Save file.
   filename <- paste0("output/", "2_", i, ".png")
-  png(file = filename)
+  png(file = filename, width = 850, height = 450)
   plot(mouth$x, mouth$y, 
        xlab = "", ylab = "",
        xlim = c(-50,50), ylim = c(0,125),
@@ -65,7 +65,7 @@ for (i in 1:12) {
   
   # Save file.
   filename <- paste0("output/", "3_", i, ".png")
-  png(file = filename)
+  png(file = filename, width = 850, height = 450)
   plot(mouth$x, mouth$y, 
        xlab = "", ylab = "",
        xlim = c(-50,50), ylim = c(0,125),
@@ -90,6 +90,7 @@ img_joined <- image_join(img_list)
 
 # Animate.
 img_animated <- image_animate(img_joined, fps = 20)
+img_animated
 
 # Save.
-image_write(image = img_animated, path = "gifs/smiley2.gif")
+image_write(image = img_animated, path = "gifs/smiley3.gif")
